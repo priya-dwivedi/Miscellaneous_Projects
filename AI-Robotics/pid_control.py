@@ -283,8 +283,52 @@ def twiddle(tol = 0.2):
     return run(params)
     
 twiddle()
-     
-     
+
+
+## Homework assignment - Smooth a rectange path
+
+
+# Do not modify path inside your function.
+path=[[0, 0], 
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+      [6, 1],
+      [6, 2],
+      [6, 3],
+      [5, 3],
+      [4, 3],
+      [3, 3],
+      [2, 3],
+      [1, 3],
+      [0, 3],
+      [0, 2],
+      [0, 1]]
+
+def smooth(path, weight_data = 0.1, weight_smooth = 0.1, tolerance = 0.00001):
+    newpath = deepcopy(path)
+  
+    tol = 100
+    
+    while tolerance < tol:
+        for i in range(len(newpath)):
+                for j in range(len(newpath[1])):
+                    aux = newpath[i][j]
+                    newpath[i][j] = newpath[i][j] + weight_data*(path[i][j] - newpath[i][j])
+                    newpath[i][j] = newpath[i][j] + weight_smooth*(newpath[(i+1)%len(newpath)][j] + newpath[(i-1)%len(newpath)][j] - 2*newpath[i][j])
+                    tol = abs(aux -newpath[i][j])
+
+    #######################
+    ### ENTER CODE HERE ###
+    #######################
+    
+    return newpath # Leave this line for the grader!
+
+printpaths(path,smooth(path))
+
 
 
 
