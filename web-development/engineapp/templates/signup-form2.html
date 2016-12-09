@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>EDD Requests</title>
+    <style type="text/css">
+      .label { font-weight: bold;
+              font-family: sans-serif;}
+      .error {color: #DF0101;
+              font-family: sans-serif;}
+      .heading {font-family: sans-serif;
+                color: #DF0101;}
+                }
+      .image {float: right;}
+      .button {background-color: #e7e7e7; 
+                color: black;
+                font-size: 16px;
+                }
+    </style>
+
+  </head>
+
+  <body>
+    <img class = "image" src = "http://www.scotiabank.com/gls/gfx/top-bar-logo.gif" alt = "">
+    <br />
+    <br />
+
+    <h2 class = "heading"> Please Login </h2>
+    <form method="post">
+
+        <p class="label">
+            Email
+            <input type="text" name="email" value="{{email}}">
+        </p>
+        <p class = "error">
+          {{error_email}}
+        </p>
+
+
+        <p class="label">
+            Password
+            <input type="password" name="password" value=""> 
+        </p>
+
+        <p class = "error">
+          {{error_password}}
+        </p>
+        <br>
+      <input class="button" type="submit">
+    </form>
+  </body>
+
+</html>

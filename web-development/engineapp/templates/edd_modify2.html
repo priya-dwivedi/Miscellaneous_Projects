@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<img src = "http://www.scotiabank.com/gls/gfx/top-bar-logo.gif" alt = "">
+
+    	<head>
+			<style>
+			table {
+			    font-family: arial, sans-serif;
+			    border-collapse: collapse;
+			    width: 90%;
+			}
+
+			td, th {
+			    border: 1px solid #dddddd;
+			    text-align: left;
+			    padding: 5px;
+			}
+
+			tr:nth-child(even) {
+			    background-color: #dddddd;
+			}
+			.heading2 {font-family: sans-serif;
+                color: #DF0101;}
+			</style>
+		</head>
+		<h2 class="heading2"> Modify Cases</h2>
+		<h4 class="heading2"> All fields other than Application ID are editable </h4>
+		<table>
+			  <tr>
+			  	<th>Application ID</th>
+			    <th>Insurer</th>
+			    <th>Date</th>
+			    <th>Insurer Comments</th>
+			    <th>Investigator Comments</th>
+<!-- 			    <th>Edit</th> -->
+			  </tr>
+		    {% for case in cases %}
+		        <tr>
+		        	<td name = "ex_application">{{case.application}}</td>
+		        	<td contenteditable='true' name = "ex_insurer">{{case.insurer}}</td>
+		        	<td contenteditable='true' name = "ex_date">{{case.date}}</td>
+		        	<td contenteditable='true' name = "ex_ins_comment">{{case.ins_comment}}</td>
+		        	<td contenteditable='true' name = "ex_inv_comment">{{case.inv_comment}}</td>
+<!-- 		        	<td><input type - "submit" value="Edit"></td> -->
+		        </tr>
+		    {% endfor %}
+		</table>
+		<input type = "submit" value="Submit Changes">
+</body>
+
+</html>

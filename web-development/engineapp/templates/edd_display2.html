@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EDD Requests</title>
+    <style type="text/css">
+      .label { font-weight: bold;
+              font-family: sans-serif;}
+      .error {color: #DF0101;
+              font-family: sans-serif;}
+      .heading {font-family: sans-serif;
+                color: #DF0101;}
+                }
+      .image {float: right;}
+      .button {background-color: #e7e7e7; 
+                color: black;
+                font-size: 16px;
+                }
+    </style>
+
+  </head>
+<body>
+	<img src = "http://www.scotiabank.com/gls/gfx/top-bar-logo.gif" alt = "">
+    <h2 class = "heading">Enter new EDD Request</h2>
+    <h4 class="heading"> Please enter first 4 fields </h4>
+<!--     <b> Hello {{temp_user}} </b> -->
+     <form method="post">
+        <p>
+            <div class="label">Application ID</div>
+            <input type="text" name="application" value="{{application}}" />
+        </p>
+    
+        <p>
+            <div class="label">Insurer Name</div>
+            <select name = "insurer" value = {{insurer}}>
+ <!--            	<option> Select an option..</option> -->
+            	<option> CMHC </option>
+            	<option> Genworth </option>
+            	<option> Canada Guaranty </option>
+            	
+            </select>
+            
+        </p>
+  
+        <p>
+            <div class="label">Date Received</div>
+            <input type="date" name="date" value="{{date}}" />
+        </p>
+
+
+        <p>
+            <div class="label" >Insurer Comments</div>
+            <textarea name="ins_comment">{{ins_comment}}</textarea>
+        </p>
+
+
+        <p>
+            <div class="label">Investigator Comments</div>
+            <textarea name="inv_comment">{{inv_comment}}</textarea>
+        </p>
+
+
+        <div class="error">{{error}}</div>
+
+        <input  class = "button" type="submit" value="Enter into system">
+    </form>
+    <hr/>
+    	<head>
+			<style>
+			.heading2 {font-family: sans-serif;
+                color: #DF0101;}
+			table {
+			    font-family: sans-serif;
+			    border-collapse: collapse;
+			    width: 90%;
+			}
+
+			td, th {
+			    border: 1px solid #dddddd;
+			    text-align: center;
+			    padding: 5px;
+			}
+
+			tr:nth-child(even) {
+			    background-color: #dddddd;
+			}
+			.my_content_container a {
+			    border-bottom: 1px solid #777777;
+			    border-left: 1px solid #000000;
+			    border-right: 1px solid #333333;
+			    border-top: 1px solid #000000;
+			    background-color: #e7e7e7; 
+                color: #DF0101;
+                font-family: sans-serif;
+			    height: 2.5em;
+			    padding: 0 1em;
+			    width: 3em;       
+			    text-decoration: none; 
+			    font-weight: bold;
+				}
+			</style>
+		</head>
+		<h2 class = "heading2">Repository of Existing Cases</h2>
+		<table>
+			  <tr>
+			  	<th>Application ID</th>
+			    <th>Insurer</th>
+			    <th>Date</th>
+			    <th>Insurer Comments</th>
+			    <th>Investigator Comments</th>
+<!-- 			    <th>Edit</th> -->
+			  </tr>
+		    {% for case in cases %}
+		        <tr>
+		        	<td>{{case.application}}</td>
+		        	<td>{{case.insurer}}</td>
+		        	<td>{{case.date}}</td>
+		        	<td>{{case.ins_comment}}</td>
+		        	<td>{{case.inv_comment}}</td>
+<!-- 		        	<td><input type - "submit" value="Edit"></td> -->
+		        </tr>
+		    {% endfor %}
+		</table>
+		<br>
+		<div class="my_content_container">
+   			 <a href="/modcases">Modify Data</a>
+		</div>
+		
+</body>
+
+</html>

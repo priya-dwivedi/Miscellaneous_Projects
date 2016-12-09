@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<img src = "http://www.scotiabank.com/gls/gfx/top-bar-logo.gif" alt = "">
+    <h1>EDD Requests</h1>
+     <form method="post">
+        <label>
+            <div>Application</div>
+            <input type="text" name="Application Number" value="{{app}}" />
+        </label>
+
+        <label>
+            <div>insurer</div>
+            <input type="text" name="Insurer Name" value="{{insurer}}" />
+        </label>
+
+        <label>
+            <div>date</div>
+            <input type="date" name="Date Received" value="{{date}}" />
+        </label>
+
+        <label>
+            <div>Insurer Comments</div>
+            <textarea name="Insurer Comments">{{ins_comment}}</textarea>
+        </label>
+
+        <label>
+            <div>Investigator Comments</div>
+            <textarea name="Investigator Comments">{{inv_comment}}</textarea>
+        </label>
+
+        <div class="error">{{error}}</div>
+        <input type="submit">
+    </form>
+    <hr />
+<!--     {% for art in arts %}
+        <div class="art">
+            <div class="art-title">{{art.title}}</div>
+            <pre class="art-body">{{art.art}}</pre>
+        </div>
+    {% endfor %} -->
+</body>
+
+</html>
