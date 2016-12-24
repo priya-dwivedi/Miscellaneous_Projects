@@ -2,6 +2,7 @@
 # coding: utf-8
 
 # In[16]:
+# Implement neural network on nmist now
 
 import numpy as numpy
 import scipy.special
@@ -69,8 +70,6 @@ class neuralNetwork:
         return final_outputs
 
 
-# In[44]:
-
 input_nodes = 784
 hidden_nodes = 100
 output_nodes = 10
@@ -81,165 +80,145 @@ learning_rate = 0.1
 n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 
 
-# In[18]:
+# load nmist data. Load trial version first
+# Current inputs range b/w -0.5 and 0.5. Convert to 0.01 to 0.99
+#num_samples = 200000
+num_samples = 1000
+n_classes = 10
 
-# load the mnist training data CSV file into a list
-training_data_file = open("C:\Users\s6324900\Desktop\Deep learning\my_neural_net\mnist_train_100.csv", 'r')
-training_data_list = training_data_file.readlines()
-training_data_file.close()
+(samples, width, height) = train_dataset.shape
+X = np.reshape(train_dataset,(samples, width*height))[0:num_samples]
+y = train_labels[0:num_samples]
+
+y
 
 
-# In[20]:
-
-# train the neural network
-#go through all records in the training data set 
-for record in training_data_list:
-    #split the record by the',' commas 
-    all_values = record.split(',')
-    #scale and shift the inputs 
-    inputs = (numpy.asfarray(all_values[1:])/ 255.0 * 0.99) + 0.01
-    #create the target output values (all 0.01, except the desired label which is 0.99)
+inputs = ((X[0]+0.5)*0.98)+0.01
+inputs
+targets = numpy.zeros(output_nodes) + 0.01
+targets[y[0]] = 0.99 
+targets
+  
+#len(X)
+for record in range(len(X)-1):
+    inputs = ((X[record]+0.5)*0.98) +0.01
     targets = numpy.zeros(output_nodes) + 0.01
-
-    #all_values[0] is the target label for this record 
-    targets[int(all_values[0])] = 0.99
-
-    # train neural network
+    targets[y[record]] = 0.99 
     n.train(inputs,targets)
     pass
 
 
-# In[21]:
+# After training, check performance on test
+#Basic check first
 
-#load the mnist test data CSV file into a list
-test_data_file = open("C:\Users\s6324900\Desktop\Deep learning\my_neural_net\mnist_test_10.csv", 'r')
-test_data_list = test_data_file.readlines() 
-test_data_file.close()
+(samples, width, height) = test_dataset.shape
+X_test = np.reshape(test_dataset, (samples, width*height))
+y_test = test_labels
 
+X_test.shape
+inputs = ((X_test[0]+0.5)*0.98) +0.01
+outputs = n.query(inputs)
+outputs
+label = numpy.argmax(outputs)
+correct_label = y_test[0]
 
-# In[25]:
+print(label)
+print(correct_label)
 
-#test the neural network
-#scorecard for how well the network performs, initially empty 
 scorecard = []
-
-#go through all the records in the test data set 
-for record in test_data_list:
-    #split the record by the',' commas 
-    all_values = record.split(',')
-    #correct answer is first value 
-    correct_label = int(all_values[0])
-    print(correct_label, "correct label")
-    #scale and shift the inputs 
-    inputs = (numpy.asfarray(all_values[1:])/ 255.0 * 0.99) + 0.01
-    #query the network 
-    outputs = n.query(inputs)
-    #the index of the highest value corresponds to the label
-    label = numpy.argmax(outputs)
-    print(label, "network's answer")
-    #append correct or incorrect to list
-    if (label == correct_label):
-        #network's answer matches correct answer, add 1 to scorecard 
+for record in range(len(X_test)):
+   inputs = ((X_test[record]+0.5)*0.98) +0.01
+   outputs = n.query(inputs)
+   label = numpy.argmax(outputs)
+   correct_label = y_test[record]
+   if (label== correct_label):
         scorecard.append(1)
-    else:
-        #network's answer doesn't match correct answer, add 0 to scorecard 
+   else:
         scorecard.append(0)
-        pass
-    pass
-
-
-# In[28]:
-
-print (scorecard)
-
-
-# In[38]:
-
-#calculate the performance score, the fraction of correct answers 
+        
 scorecard_array = numpy.asarray(scorecard) 
-print scorecard_array
 print ("performance =", (scorecard_array.sum()*1.00/ scorecard_array.size*1.00))
 
+## Run above neural network on all the data and then check performance
+# Current inputs range b/w -0.5 and 0.5. Convert to 0.01 to 0.99
+# Load all data sets using pickle
 
-# In[39]:
+import os
+os.chdir(r"/Users/priyankadwivedi")
+pickle_file = 'notMNIST.pickle'
 
-# Now run on all data
-# load the mnist training data CSV file into a list
-training_data_file = open("C:\Users\s6324900\Desktop\Deep learning\my_neural_net\mnist_train.csv", 'r')
-training_data_list = training_data_file.readlines()
-training_data_file.close()
+with open(pickle_file, 'rb') as f:
+  save = pickle.load(f)
+  train_dataset = save['train_dataset']
+  train_labels = save['train_labels']
+  valid_dataset = save['valid_dataset']
+  valid_labels = save['valid_labels']
+  test_dataset = save['test_dataset']
+  test_labels = save['test_labels']
+  del save  # hint to help gc free up memory
+  print('Training set', train_dataset.shape, train_labels.shape)
+  print('Validation set', valid_dataset.shape, valid_labels.shape)
+  print('Test set', test_dataset.shape, test_labels.shape)
 
+num_samples = 200000
+#num_samples = 1000
+n_classes = 10
 
-# In[45]:
+(samples, width, height) = train_dataset.shape
+X = np.reshape(train_dataset,(samples, width*height))[0:num_samples]
+y = train_labels[0:num_samples]
 
-# train the neural network
-
-# epochs is the number of times the training data set is used for training
+# Train on all data. Run using epoch
 epochs = 5
 
 for e in range(epochs):
-    # go through all records in the training data set
-    for record in training_data_list:
-        # split the record by the ',' commas
-        all_values = record.split(',')
-        # scale and shift the inputs
-        inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-        # create the target output values (all 0.01, except the desired label which is 0.99)
+    for record in range(len(X)-1):
+        inputs = ((X[record]+0.5)*0.98) +0.01
         targets = numpy.zeros(output_nodes) + 0.01
-        # all_values[0] is the target label for this record
-        targets[int(all_values[0])] = 0.99
-        n.train(inputs, targets)
+        targets[y[record]] = 0.99 
+        n.train(inputs,targets)
         pass
     pass
 
+# Test again on all test data
+(samples, width, height) = test_dataset.shape
+X_test = np.reshape(test_dataset, (samples, width*height))
+y_test = test_labels
 
-# In[46]:
-
-# load the mnist test data CSV file into a list
-test_data_file = open("C:\Users\s6324900\Desktop\Deep learning\my_neural_net\mnist_test.csv", 'r')
-test_data_list = test_data_file.readlines()
-test_data_file.close()
-
-
-# In[47]:
-
-# test the neural network
-
-# scorecard for how well the network performs, initially empty
 scorecard = []
-
-# go through all the records in the test data set
-for record in test_data_list:
-    # split the record by the ',' commas
-    all_values = record.split(',')
-    # correct answer is first value
-    correct_label = int(all_values[0])
-    # scale and shift the inputs
-    inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-    # query the network
-    outputs = n.query(inputs)
-    # the index of the highest value corresponds to the label
-    label = numpy.argmax(outputs)
-    # append correct or incorrect to list
-    if (label == correct_label):
-        # network's answer matches correct answer, add 1 to scorecard
+for record in range(len(X_test)):
+   inputs = ((X_test[record]+0.5)*0.98) +0.01
+   outputs = n.query(inputs)
+   label = numpy.argmax(outputs)
+   correct_label = y_test[record]
+   if (label== correct_label):
         scorecard.append(1)
-    else:
-        # network's answer doesn't match correct answer, add 0 to scorecard
+   else:
         scorecard.append(0)
-        pass
-    
-    pass
-
-
-# In[48]:
-
-#calculate the performance score, the fraction of correct answers 
+        
 scorecard_array = numpy.asarray(scorecard) 
 print ("performance =", (scorecard_array.sum()*1.00/ scorecard_array.size*1.00))
 
 
-# In[ ]:
+# Test again on all valid data
+valid_dataset.shape
+(samples, width, height) = valid_dataset.shape
+X_valid = np.reshape(valid_dataset, (samples, width*height))
+y_valid = valid_labels
+
+scorecard = []
+for record in range(len(X_valid)):
+   inputs = ((X_valid[record]+0.5)*0.98) +0.01
+   outputs = n.query(inputs)
+   label = numpy.argmax(outputs)
+   correct_label = y_valid[record]
+   if (label== correct_label):
+        scorecard.append(1)
+   else:
+        scorecard.append(0)
+        
+scorecard_array = numpy.asarray(scorecard) 
+print ("performance =", (scorecard_array.sum()*1.00/ scorecard_array.size*1.00))
 
 
 
